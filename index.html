@@ -1,1 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Surprise!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { --primary: #ff4d6d; --bg: #fff0f3; --text: #590d22; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); text-align: center; }
+        
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        h1 { font-family: 'Pacifico', cursive; font-size: 3rem; color: var(--primary); margin: 0; }
+        
+        /* Music Toggle Button */
+        .music-control {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            background: white; border-radius: 50%; width: 45px; height: 45px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 1.2rem; cursor: pointer;
+        }
+
+        .celebrate-btn {
+            background: var(--primary); color: white; border: none; padding: 15px 35px;
+            border-radius: 50px; font-size: 1.1rem; font-weight: bold; margin-top: 25px;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        /* Responsive Gallery */
+        .gallery { padding: 40px 15px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .photo-card { background: white; padding: 8px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .photo-card img { width: 100%; border-radius: 5px; height: 180px; object-fit: cover; }
+
+        .message-box { background: white; margin: 20px; padding: 40px 20px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+
+    <audio id="bday-music" loop>
+        <source src="YOUR_MUSIC_URL_HERE.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-control" onclick="toggleMusic()">🎵</div>
+
+    <section class="hero">
+        <h1>Happy Birthday!</h1>
+        <p>A special digital gift for you ✨</p>
+        <button class="celebrate-btn" onclick="startEverything()">TAP TO START 🎁</button>
+    </section>
+
+    <section class="message-box">
+        <h2 style="font-family: 'Pacifico'">Dear Friend,</h2>
+        <p>I hope your day is as amazing as you are! Swipe down for some of our best memories. 🎂</p>
+    </section>
+
+    <div class="gallery">
+        <div class="photo-card"><img src="photo1.jpg" alt="Memory 1"></div>
+        <div class="photo-card"><img src="photo2.jpg" alt="Memory 2"></div>
+        <div class="photo-card"><img src="photo3.jpg" alt="Memory 3"></div>
+        <div class="photo-card"><img src="photo4.jpg" alt="Memory 4"></div>
+    </div>
+
+    <script>
+        const music = document.getElementById('bday-music');
+
+        function startEverything() {
+            // Start Music
+            music.play();
+            // Pop Confetti
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            // Scroll down a bit to show it started
+            window.scrollBy({ top: 300, behavior: 'smooth' });
+        }
+
+        function toggleMusic() {
+            if (music.paused) { music.play(); } else { music.pause(); }
+        }
+    </script>
+</body>
+</html>
 
