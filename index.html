@@ -10,41 +10,44 @@
         :root { --royal-blue: #002366; --gold: #ffd700; --silver: #e0e0e0; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #001a4d; color: white; text-align: center; }
         
-        .hero { padding: 40px 20px; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
+        .hero { padding: 40px 20px; min-height: 90vh; display: flex; flex-direction: column; justify-content: center; }
         h1 { font-family: 'Pacifico', cursive; font-size: 3.5rem; color: white; margin: 10px 0; }
         
-        /* Secret Section Style */
-        #secret-area { display: none; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 20px; margin: 20px; backdrop-filter: blur(10px); }
-        #waiting-timer { font-size: 2rem; color: var(--gold); font-weight: bold; display: none; }
-        
+        #timer { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+        .time-unit { background: rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 10px; min-width: 50px; border: 1px solid rgba(255,215,0,0.3); }
+        .time-unit span { font-size: 1.2rem; display: block; color: var(--gold); }
+
         .click-me-btn {
             background: linear-gradient(45deg, #0056b3, #00aaff);
-            color: white; border: none; padding: 15px 40px; border-radius: 50px;
-            font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(0, 170, 255, 0.4);
+            color: white; border: none; padding: 18px 45px; border-radius: 50px;
+            font-size: 1.3rem; font-weight: bold; cursor: pointer; 
+            box-shadow: 0 0 20px rgba(0, 170, 255, 0.5);
         }
 
-        .hidden-photo { width: 100%; max-width: 300px; border-radius: 15px; border: 3px solid var(--gold); margin-top: 20px; display: none; }
+        #secret-area { display: none; padding: 20px; margin-top: 20px; }
+        #waiting-timer { font-size: 1.8rem; color: var(--gold); margin: 20px 0; }
+
+        .gallery { padding: 30px 15px; display: grid; grid-template-columns: repeat(1, 1fr); gap: 20px; }
+        .photo-card { background: white; padding: 10px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 85%; margin: auto; }
+        .photo-card img { width: 100%; border-radius: 5px; height: auto; display: block; }
 
         .rainbow-msg {
-            font-size: 1.4rem; font-weight: bold; display: none;
+            font-size: 1.5rem; font-weight: bold; display: none;
             background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: move-bg 3s linear infinite;
         }
         @keyframes move-bg { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-        
-        /* Timer from previous version */
-        #timer { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
-        .time-unit { background: rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 10px; min-width: 50px; }
-        .time-unit span { font-size: 1.2rem; display: block; color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <audio id="bday-music" loop><source src="music.mp3" type="audio/mpeg"></audio>
+    <audio id="bday-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
 
     <section class="hero">
-        <p style="color: var(--silver); letter-spacing: 3px;">ROYAL CELEBRATION</p>
+        <p style="color: var(--silver); letter-spacing: 3px;">THE ROYAL COUNTDOWN</p>
         <h1>Divya</h1>
 
         <div id="timer">
@@ -54,31 +57,40 @@
             <div class="time-unit"><span id="secs">00</span><small>Sec</small></div>
         </div>
 
-        <div style="margin-top: 30px;">
-            <button class="click-me-btn" id="main-btn" onclick="askPassword()">CLICK ON ME 🎁</button>
-        </div>
+        <button class="click-me-btn" id="main-btn" onclick="handleLock()">CLICK ON ME 🎁</button>
 
         <div id="secret-area">
-            <div id="waiting-timer">10</div>
-            <div id="reveal-content">
-                <p class="rainbow-msg" id="secret-msg">
-                    Divya, you found the secret! <br>
-                    You are truly special. Keep being awesome! 👑
-                </p>
-                <img src="secret-photo.jpg" id="secret-img" class="hidden-photo">
+            <div id="waiting-timer"></div>
+            <p class="rainbow-msg" id="secret-msg">
+                Happy Birthday Divya! 🎉<br>
+                You are a true king. Stay Royal!<br>
+                👑👑👑
+            </p>
+            <div class="gallery" id="final-gallery" style="display: none;">
+                <div class="photo-card"><img src="photo1.jpg"></div>
+                <div class="photo-card"><img src="photo2.jpg"></div>
+                <div class="photo-card"><img src="photo3.jpg"></div>
             </div>
         </div>
     </section>
 
     <script>
         const music = document.getElementById('bday-music');
-
-        // Countdown to Birthday
         const targetDate = new Date("Jan 11, 2026 00:00:00").getTime();
-        setInterval(() => {
+        let isUnlocked = false;
+
+        const countdown = setInterval(() => {
             const now = new Date().getTime();
             const diff = targetDate - now;
-            if (diff > 0) {
+
+            if (diff <= 0) {
+                isUnlocked = true;
+                clearInterval(countdown);
+                document.getElementById('days').innerText = "0";
+                document.getElementById('hours').innerText = "0";
+                document.getElementById('mins').innerText = "0";
+                document.getElementById('secs').innerText = "0";
+            } else {
                 document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
                 document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 document.getElementById('mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -86,39 +98,43 @@
             }
         }, 1000);
 
+        function handleLock() {
+            if (!isUnlocked) {
+                alert("Patience, King! This gift unlocks exactly at 12:00 AM on Jan 11th. ⏳");
+            } else {
+                askPassword();
+            }
+        }
+
         function askPassword() {
             let pass = prompt("Enter 'sariya' to confirm you are Divya:");
-            
             if (pass !== null && pass.toLowerCase() === "sariya") {
                 music.play();
                 document.getElementById('main-btn').style.display = 'none';
                 document.getElementById('secret-area').style.display = 'block';
-                document.getElementById('waiting-timer').style.display = 'block';
                 
-                // 10 Second Countdown
                 let timeLeft = 10;
                 let downloadTimer = setInterval(() => {
                     if (timeLeft <= 0) {
                         clearInterval(downloadTimer);
                         document.getElementById('waiting-timer').style.display = 'none';
-                        revealSecret();
+                        revealEverything();
                     } else {
-                        document.getElementById('waiting-timer').innerText = "Something special in " + timeLeft + "...";
+                        document.getElementById('waiting-timer').innerText = "Unlocking your surprise in " + timeLeft + "...";
                     }
                     timeLeft -= 1;
                 }, 1000);
                 
-                // Throw some initial confetti
                 confetti({ particleCount: 100, spread: 70, colors: ['#002366', '#ffd700'] });
             } else {
-                alert("Wrong word! You are not authorized 🚫");
+                alert("Wrong word! 🚫");
             }
         }
 
-        function revealSecret() {
+        function revealEverything() {
             document.getElementById('secret-msg').style.display = 'block';
-            document.getElementById('secret-img').style.display = 'inline-block';
-            confetti({ particleCount: 300, spread: 100, origin: { y: 0.6 } });
+            document.getElementById('final-gallery').style.display = 'grid';
+            confetti({ particleCount: 400, spread: 120, origin: { y: 0.6 } });
         }
     </script>
 </body>
