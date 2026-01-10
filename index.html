@@ -7,96 +7,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root { 
-            --royal-blue: #002366; 
-            --electric-blue: #0056b3;
-            --silver: #e0e0e0;
-            --gold: #ffd700;
-        }
+        :root { --royal-blue: #002366; --gold: #ffd700; --silver: #e0e0e0; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #001a4d; color: white; text-align: center; }
         
-        body { 
-            margin: 0; font-family: 'Poppins', sans-serif; 
-            background: linear-gradient(180deg, #001a4d 0%, #003399 100%); 
-            color: white; text-align: center; min-height: 100vh;
-        }
-
-        /* Glassmorphism Hero */
-        .hero { padding: 60px 20px; }
+        .hero { padding: 40px 20px; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
+        h1 { font-family: 'Pacifico', cursive; font-size: 3.5rem; color: white; margin: 10px 0; }
         
-        h1 { 
-            font-family: 'Pacifico', cursive; font-size: 3.8rem; 
-            color: white; text-shadow: 0 0 20px rgba(255,255,255,0.5);
-            margin: 10px 0; 
-        }
-
-        /* Countdown */
-        #timer { display: flex; justify-content: center; gap: 10px; margin: 30px 0; }
-        .time-unit { 
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-            padding: 15px; border-radius: 15px; min-width: 60px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .time-unit span { font-size: 1.8rem; display: block; font-weight: bold; color: var(--gold); }
-        .time-unit small { font-size: 0.7rem; color: var(--silver); }
-
-        /* Click 🎀 */
-        .celebrate-btn {
+        /* Secret Section Style */
+        #secret-area { display: none; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 20px; margin: 20px; backdrop-filter: blur(10px); }
+        #waiting-timer { font-size: 2rem; color: var(--gold); font-weight: bold; display: none; }
+        
+        .click-me-btn {
             background: linear-gradient(45deg, #0056b3, #00aaff);
-            color: white; border: none; padding: 20px 50px;
-            border-radius: 50px; font-size: 1.3rem; font-weight: bold;
-            box-shadow: 0 0 30px rgba(0, 170, 255, 0.6); cursor: pointer;
-            transition: 0.3s;
+            color: white; border: none; padding: 15px 40px; border-radius: 50px;
+            font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(0, 170, 255, 0.4);
         }
 
-        /* Photo Gallery */
-        .gallery { padding: 40px 15px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .photo-card { 
-            background: white; padding: 10px; border-radius: 5px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: rotate(-3deg); 
-        }
-        .photo-card img { width: 100%; border-radius: 2px; height: 180px; object-fit: cover; filter: brightness(1.1); }
+        .hidden-photo { width: 100%; max-width: 300px; border-radius: 15px; border: 3px solid var(--gold); margin-top: 20px; display: none; }
 
-        /* Pop-up Message Box */
-        #overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center;
-        }
-        .message-content {
-            padding: 30px; border-radius: 25px; width: 85%;
-            background: rgba(255,255,255,0.05); border: 2px solid var(--gold);
-        }
-        .colorful-text {
-            font-size: 1.5rem; font-weight: bold;
-            background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+        .rainbow-msg {
+            font-size: 1.4rem; font-weight: bold; display: none;
+            background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: rainbow 3s linear infinite;
+            animation: move-bg 3s linear infinite;
         }
-        @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-
-        .close-btn { color: white; margin-top: 20px; background: none; border: 1px solid white; padding: 10px 20px; border-radius: 20px; }
+        @keyframes move-bg { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+        
+        /* Timer from previous version */
+        #timer { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+        .time-unit { background: rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 10px; min-width: 50px; }
+        .time-unit span { font-size: 1.2rem; display: block; color: var(--gold); }
     </style>
 </head>
 <body>
 
     <audio id="bday-music" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
-    <div id="overlay">
-        <div class="message-content">
-            <h2 style="font-family: 'Pacifico'; color: var(--gold);">Surprise!</h2>
-            <p class="colorful-text">
-                Divya, you are a legend!<br>
-                May your day be filled with royal vibes,<br>
-                amazing moments, and endless joy!<br>
-                Keep shining like a star! ⭐
-            </p>
-            <button class="close-btn" onclick="closeBox()">Close</button>
-        </div>
-    </div>
-
     <section class="hero">
-        <p style="letter-spacing: 5px; color: var(--silver);">THE ROYAL BIRTHDAY</p>
+        <p style="color: var(--silver); letter-spacing: 3px;">ROYAL CELEBRATION</p>
         <h1>Divya</h1>
-        
+
         <div id="timer">
             <div class="time-unit"><span id="days">00</span><small>Days</small></div>
             <div class="time-unit"><span id="hours">00</span><small>Hrs</small></div>
@@ -104,20 +54,27 @@
             <div class="time-unit"><span id="secs">00</span><small>Sec</small></div>
         </div>
 
-        <button class="celebrate-btn" onclick="startEverything()">TAP FOR MAGIC ✨</button>
-    </section>
+        <div style="margin-top: 30px;">
+            <button class="click-me-btn" id="main-btn" onclick="askPassword()">CLICK ON ME 🎁</button>
+        </div>
 
-    <div class="gallery">
-        <div class="photo-card"><img src="photo1.jpg"></div>
-        <div class="photo-card" style="transform: rotate(3deg);"><img src="photo2.jpg"></div>
-        <div class="photo-card"><img src="photo3.jpg"></div>
-        <div class="photo-card" style="transform: rotate(3deg);"><img src="photo4.jpg"></div>
-    </div>
+        <div id="secret-area">
+            <div id="waiting-timer">10</div>
+            <div id="reveal-content">
+                <p class="rainbow-msg" id="secret-msg">
+                    Divya, you found the secret! <br>
+                    You are truly special. Keep being awesome! 👑
+                </p>
+                <img src="secret-photo.jpg" id="secret-img" class="hidden-photo">
+            </div>
+        </div>
+    </section>
 
     <script>
         const music = document.getElementById('bday-music');
-        const targetDate = new Date("Jan 11, 2026 00:00:00").getTime();
 
+        // Countdown to Birthday
+        const targetDate = new Date("Jan 11, 2026 00:00:00").getTime();
         setInterval(() => {
             const now = new Date().getTime();
             const diff = targetDate - now;
@@ -129,17 +86,39 @@
             }
         }, 1000);
 
-        function startEverything() {
-            music.play();
-            confetti({ 
-                particleCount: 200, spread: 80, origin: { y: 0.6 },
-                colors: ['#002366', '#0056b3', '#ffd700', '#ffffff'] 
-            });
-            document.getElementById('overlay').style.display = 'flex';
+        function askPassword() {
+            let pass = prompt("Enter 'sariya' to confirm you are Divya:");
+            
+            if (pass !== null && pass.toLowerCase() === "sariya") {
+                music.play();
+                document.getElementById('main-btn').style.display = 'none';
+                document.getElementById('secret-area').style.display = 'block';
+                document.getElementById('waiting-timer').style.display = 'block';
+                
+                // 10 Second Countdown
+                let timeLeft = 10;
+                let downloadTimer = setInterval(() => {
+                    if (timeLeft <= 0) {
+                        clearInterval(downloadTimer);
+                        document.getElementById('waiting-timer').style.display = 'none';
+                        revealSecret();
+                    } else {
+                        document.getElementById('waiting-timer').innerText = "Something special in " + timeLeft + "...";
+                    }
+                    timeLeft -= 1;
+                }, 1000);
+                
+                // Throw some initial confetti
+                confetti({ particleCount: 100, spread: 70, colors: ['#002366', '#ffd700'] });
+            } else {
+                alert("Wrong word! You are not authorized 🚫");
+            }
         }
 
-        function closeBox() {
-            document.getElementById('overlay').style.display = 'none';
+        function revealSecret() {
+            document.getElementById('secret-msg').style.display = 'block';
+            document.getElementById('secret-img').style.display = 'inline-block';
+            confetti({ particleCount: 300, spread: 100, origin: { y: 0.6 } });
         }
     </script>
 </body>
