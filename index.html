@@ -3,28 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TESTING Divya's Site</title>
+    <title>HBD Divya | 18th</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --royal-blue: #002366; --gold: #ffd700; --silver: #e0e0e0; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #001a4d; color: white; text-align: center; overflow-x: hidden; }
+        
         .hero { padding: 40px 20px; min-height: 90vh; display: flex; flex-direction: column; justify-content: center; }
-        h1 { font-family: 'Pacifico', cursive; font-size: 3.5rem; color: white; margin: 10px 0; }
+        h1 { font-family: 'Pacifico', cursive; font-size: 3.5rem; color: white; margin: 10px 0; text-shadow: 0 0 15px rgba(255,215,0,0.3); }
+        
+        #timer { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+        .time-unit { background: rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 10px; min-width: 55px; border: 1px solid rgba(255,215,0,0.3); backdrop-filter: blur(5px); }
+        .time-unit span { font-size: 1.2rem; display: block; color: var(--gold); font-weight: bold; }
+
         .click-me-btn {
             background: linear-gradient(45deg, #0056b3, #00aaff);
             color: white; border: none; padding: 18px 45px; border-radius: 50px;
             font-size: 1.3rem; font-weight: bold; cursor: pointer; 
-            box-shadow: 0 0 25px rgba(0, 170, 255, 0.5);
+            box-shadow: 0 0 25px rgba(0, 170, 255, 0.5); transition: 0.3s;
         }
+
         #secret-area { display: none; padding: 20px; margin-top: 20px; }
         #waiting-timer { font-size: 1.8rem; color: var(--gold); margin: 20px 0; font-weight: bold; }
+
         .gallery { padding: 30px 15px; display: grid; grid-template-columns: repeat(1, 1fr); gap: 25px; }
-        .photo-card { background: white; padding: 12px; border-radius: 15px; width: 90%; margin: auto; }
+        .photo-card { background: white; padding: 12px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; margin: auto; }
         .photo-card img { width: 100%; border-radius: 8px; height: auto; display: block; }
+
         .rainbow-msg {
             font-size: 1.3rem; font-weight: bold; display: none; line-height: 1.6;
-            padding: 20px; border-radius: 15px;
+            padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px;
             background: linear-gradient(to right, #ff8a00, #da1b60, #89fffd, #00ff00);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: move-bg 4s linear infinite;
@@ -39,22 +48,28 @@
     </audio>
 
     <section class="hero">
-        <h2 style="color: var(--gold);">⚠️ TEST MODE ACTIVE ⚠️</h2>
+        <p style="color: var(--silver); letter-spacing: 3px; font-weight: bold;">BIRTHDAY AANE WALA HAI YAYYY!</p>
         <h1>Divya</h1>
-        <p>Tap the button below to test the password and photos.</p>
 
-        <button class="click-me-btn" id="main-btn" onclick="askPassword()">CLICK ON ME 🎁</button>
+        <div id="timer">
+            <div class="time-unit"><span id="days">00</span><small>Days</small></div>
+            <div class="time-unit"><span id="hours">00</span><small>Hrs</small></div>
+            <div class="time-unit"><span id="mins">00</span><small>Min</small></div>
+            <div class="time-unit"><span id="secs">00</span><small>Sec</small></div>
+        </div>
+
+        <button class="click-me-btn" id="main-btn" onclick="handleLock()">CLICK ON ME 🎁</button>
 
         <div id="secret-area">
             <div id="waiting-timer"></div>
             <p class="rainbow-msg" id="secret-msg">
                 Happy Birthday Divya! 🎉<br><br>
-                You are a Great friend bro 🥹✌️<br>
+                You are a Great friend bro ✌️<br>
                 I'm glad I met you.<br><br>
                 Bitch abhi tak minecraft nahi liya us din se kabse bol rha tha minecraft minecraft...<br><br>
-                Anyways happy birthday! Ye le Mera gift 💲💲💵💵 <br>
-                La returns gift me minecraft account 🥹✌️<br><br>
-                Btw whenever you say sariya sariya u remind me of mc of redo of healer...<br><br>
+                Anyways happy birthday! Ye le Mera gift 💲💲 <br>
+                La returns gift me minecraft account ✌️<br><br>
+                Btw whenever you say sariya sariya u remind me of mc of redo of healer niche tere jaise hi ek larke ka photo lagaya hai dekhle jaa...<br><br>
                 Enjoy your day buddy 🎀 ja 18 ka hogya sare chrome website se ghoom ke aaja!<br><br>
                 👑👑👑
             </p>
@@ -68,9 +83,35 @@
 
     <script>
         const music = document.getElementById('bday-music');
+        const targetDate = new Date("Jan 11, 2026 00:00:00").getTime();
+        let isUnlocked = false;
+
+        const countdown = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                isUnlocked = true;
+                clearInterval(countdown);
+                document.querySelectorAll('.time-unit span').forEach(s => s.innerText = "0");
+            } else {
+                document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+                document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById('mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('secs').innerText = Math.floor((diff % (1000 * 60)) / 1000);
+            }
+        }, 1000);
+
+        function handleLock() {
+            if (!isUnlocked) {
+                alert("Patience, King! This gift unlocks exactly at 12:00 AM on Jan 11th. ⏳");
+            } else {
+                askPassword();
+            }
+        }
 
         function askPassword() {
-            let pass = prompt("Enter 'sariya' to test:");
+            let pass = prompt("Enter 'sariya' to confirm you are Divya:");
             if (pass !== null && pass.toLowerCase() === "sariya") {
                 music.play();
                 document.getElementById('main-btn').style.display = 'none';
@@ -83,21 +124,21 @@
                         document.getElementById('waiting-timer').style.display = 'none';
                         revealEverything();
                     } else {
-                        document.getElementById('waiting-timer').innerText = "Testing 10s wait: " + timeLeft + "...";
+                        document.getElementById('waiting-timer').innerText = "Unlocking your surprise in " + timeLeft + "...";
                     }
                     timeLeft -= 1;
                 }, 1000);
                 
-                confetti({ particleCount: 100, spread: 70 });
+                confetti({ particleCount: 100, spread: 70, colors: ['#002366', '#ffd700'] });
             } else {
-                alert("Wrong password!");
+                alert("Wrong word! You are not authorize 🚫");
             }
         }
 
         function revealEverything() {
             document.getElementById('secret-msg').style.display = 'block';
             document.getElementById('final-gallery').style.display = 'grid';
-            confetti({ particleCount: 400, spread: 120, origin: { y: 0.6 } });
+            confetti({ particleCount: 400, spread: 120, origin: { y: 0.6 }, colors: ['#ffd700', '#ffffff', '#0056b3'] });
         }
     </script>
 </body>
