@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>HBD Divya | 18th</title>
+    <meta property="og:title" content="A Special Surprise for Divya! 🎁">
+    <meta property="og:description" content="Click to open your royal birthday gift. Unlocks at midnight!">
+    <meta property="og:type" content="website">
+    <meta name="description" content="Birthday celebration for Divya.">
+
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -43,7 +49,7 @@
 </head>
 <body>
 
-    <audio id="bday-music" loop>
+    <audio id="bday-music" loop preload="auto">
         <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-153.mp3" type="audio/mpeg">
     </audio>
 
@@ -104,6 +110,7 @@
 
         function handleLock() {
             if (!isUnlocked) {
+                // Changed text per your request
                 alert("Ruko Jara Sabar Karo! This bish unlocks exactly at 12:00 AM on Jan 11th. ⏳");
             } else {
                 askPassword();
@@ -113,7 +120,9 @@
         function askPassword() {
             let pass = prompt("Enter 'sariya' to confirm you are Divya:");
             if (pass !== null && pass.toLowerCase() === "sariya") {
-                music.play();
+                // Music starts only after this user interaction (mandatory for mobile browsers)
+                music.play().catch(e => console.log("Audio play failed", e));
+                
                 document.getElementById('main-btn').style.display = 'none';
                 document.getElementById('secret-area').style.display = 'block';
                 
@@ -131,7 +140,7 @@
                 
                 confetti({ particleCount: 100, spread: 70, colors: ['#002366', '#ffd700'] });
             } else {
-                alert("Wrong word! You are not authorize 🚫");
+                alert("Wrong word! You are not authorized 🚫");
             }
         }
 
